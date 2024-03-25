@@ -1,0 +1,12 @@
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run tests
+        env:
+          MY_SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}  
+        run: |
+          echo "Running tests with $MY_SECRET_TOKEN"
