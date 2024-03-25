@@ -1,5 +1,9 @@
 package auth
 
+import (
+	"os"
+)
+
 type tokenStore struct {
 	tokens map[string]string
 }
@@ -16,6 +20,7 @@ func SetToken(key, value string) {
 	store.tokens[key] = value
 }
 
-func GetToken(key string) string {
-	return store.tokens[key]
+func GetToken() string {
+	token := os.Getenv("YANDEX_TOKEN")
+	return token
 }
