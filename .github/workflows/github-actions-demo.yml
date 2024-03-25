@@ -1,3 +1,16 @@
+<<<<<<< HEAD
+=======
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+>>>>>>> 85ffdc0dab10db48308d47f7a399dfab96f9c99f
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -5,8 +18,36 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
+<<<<<<< HEAD
       - name: Run tests
         env:
           MY_SECRET_TOKEN: ${{ secrets.SECRET_TOKEN }}  
         run: |
           echo "Running tests with $MY_SECRET_TOKEN"
+=======
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.17'  # Укажите версию Go, если это необходимо
+
+      - name: Install dependencies
+        run: go mod download
+
+      - name: Build binary
+        run: go build -o bin/myapp cmd/main.go
+
+      - name: Run unit tests
+        run: go test -v ./...
+
+      - name: Run integration tests
+        run: go test -v ./integration_tests
+
+      - name: Run end-to-end tests
+        run: go test -v ./e2e_tests
+
+      - name: Upload binary artifact
+        uses: actions/upload-artifact@v2
+        with:
+          name: myapp-binary
+          path: bin/myapp
+>>>>>>> 85ffdc0dab10db48308d47f7a399dfab96f9c99f
