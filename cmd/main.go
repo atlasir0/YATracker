@@ -5,10 +5,15 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+
+	"github.com/joho/godotenv"
 )
 
 func main() {
-	auth.SetToken("yandex", "y0_AgAAAAAXBtATAAt7GwAAAAD-47QTAAAPIC1E5hNDO7tHK3Vgxuh3p7uWGw")
+	if err := godotenv.Load("token.env"); err != nil {
+		fmt.Println("Error loading .env file:", err)
+		return
+	}
 
 	apiUrl := "https://login.yandex.ru/info"
 	req, err := http.NewRequest("GET", apiUrl, nil)
@@ -17,7 +22,7 @@ func main() {
 		return
 	}
 
-	req.Header.Set("Authorization", "OAuth "+auth.GetToken("yandex"))
+	req.Header.Set("Authorization", "OAuth "+auth.GetToken())
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
 		fmt.Println(err)
@@ -31,5 +36,6 @@ func main() {
 		return
 	}
 
-	fmt.Println(string(body))
+	fmt.Println("HTTP ответ:", resp.Status)
+	fmt.Println("Тело ответа:", string(body))
 }
