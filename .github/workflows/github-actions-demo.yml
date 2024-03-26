@@ -15,11 +15,6 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-
-      - name: Run tests
-        run: |
-          echo "Running tests"
-
       - name: Set up Go
         uses: actions/setup-go@v2
         with:
@@ -37,6 +32,14 @@ jobs:
       - name: Upload binary artifact
         uses: actions/upload-artifact@v2
         with:
-          name: myapp-binary
+          name: myapp-binary 
           path: bin/myapp
+
+      - name: Deploy to Yandex Cloud Functions
+        run: |
+          curl -X POST \
+            -H "Authorization: Bearer $YANDEX_CLOUD_API_TOKEN" \
+            -F "file=@bin/myapp" \
+            -F "function_id=$YANDEX_CLOUD_FUNCTION_ID" \
+            https://functions.yandexcloud.net/api/v1/functions/upload
 
