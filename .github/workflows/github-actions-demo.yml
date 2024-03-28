@@ -47,24 +47,18 @@ jobs:
           /root/.yandex-cloud/bin/yc serverless function version publish \
             --function-name d4enifnsdldib6q5d8pa
 
-      - name: Show deployment status
+      - name: Deploy
+        env:
+          YC_TOKEN: ${{ secrets.AUTHORIZED_KEY }}
         run: |
-          # Вывод статуса деплоя (по желанию)
-          /root/.yandex-cloud/bin/yc serverless function version list \
+          yc config set token $YC_TOKEN
+          yc serverless function version create \
+            --function-name d4enifnsdldib6q5d8pa \
+            --runtime go113 \
+            --entrypoint main \
+            --memory 256m \
+            --execution-timeout 5s \
+            --source-path ./bin/main
+          yc serverless function version publish \
             --function-name d4enifnsdldib6q5d8pa
-
-- name: Deploy
-  env:
-    YC_TOKEN: ${{ secrets.AUTHORIZED_KEY }}
-  run: |
-    yc config set token $YC_TOKEN
-    yc serverless function version create \
-      --function-name d4enifnsdldib6q5d8pa \
-      --runtime go113 \
-      --entrypoint main \
-      --memory 256m \
-      --execution-timeout 5s \
-      --source-path ./bin/main
-    yc serverless function version publish \
-      --function-name d4enifnsdldib6q5d8pa
 
