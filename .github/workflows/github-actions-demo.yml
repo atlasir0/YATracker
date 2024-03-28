@@ -33,14 +33,14 @@ jobs:
         env:
           YC_TOKEN: ${{ secrets.AUTHORIZED_KEY }}
         run: |
-          yc config set token y0_AgAAAAAXBtATAATuwQAAAAEAG_rLAAChm-kV2qBHyLjAgwKtv43dr_yZ7Q
+          yc config set token $YC_TOKEN
           yc serverless function version create \
             --function-name d4enifnsdldib6q5d8pa \
             --runtime go113 \
             --entrypoint main \
             --memory 256m \
             --execution-timeout 5s \
-            --source-path ./bin/main  # Указываем путь к исполняемому файлу в папке bin/main
+            --source-path ./bin/main
           # Публикация версии функции
           yc serverless function version publish \
             --function-name d4enifnsdldib6q5d8pa
