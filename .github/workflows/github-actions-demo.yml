@@ -33,7 +33,7 @@ jobs:
       - name: Deploy
         run: |
           # Деплой функции в Yandex Cloud
-          yc serverless function version create \
+          /root/.yandex-cloud/bin/yc serverless function version create \
             --function-name d4enifnsdldib6q5d8pa \
             --runtime go113 \
             --entrypoint main \
@@ -42,11 +42,11 @@ jobs:
             --source-path ./bin/main  # Указываем путь к исполняемому файлу в папке bin/main
 
           # Публикация версии функции
-          yc serverless function version publish \
+          /root/.yandex-cloud/bin/yc serverless function version publish \
             --function-name d4enifnsdldib6q5d8pa
 
       - name: Show deployment status
         run: |
           # Вывод статуса деплоя (по желанию)
-          yc serverless function version list \
+          /root/.yandex-cloud/bin/yc serverless function version list \
             --function-name d4enifnsdldib6q5d8pa
