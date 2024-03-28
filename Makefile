@@ -6,8 +6,9 @@ on:
       - main
 
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -24,35 +25,28 @@ jobs:
         run: |
           go build -o bin/main ./cmd/...  # Сборка проекта и помещение исполняемого файла в bin/main
 
+      - name: Set up yc-cli
+        uses: yandex-cloud/yc-cli-action@v1
+        with:
+          yc-token: y0_AgAAAAAXBtATAATuwQAAAAEAG_rLAAChm-kV2qBHyLjAgwKtv43dr_yZ7Q
+
       - name: Deploy
-        runs-on: ubuntu-latest
+        run: |
+          # Деплой функции в Yandex Cloud
+          yc serverless function version create \
+            --function-name my-function \
+            --runtime go113 \
+            --entrypoint my-function \
+            --memory 256m \
+            --execution-timeout 5s \
+            --source-path ./bin/main  # Указываем путь к исполняемому файлу в папке bin/main
 
-        steps:
-          - name: Checkout code
-            uses: actions/checkout@v2
+          # Публикация версии функции
+          yc serverless function version publish \
+            --function-name my-function
 
-          - name: Set up yc-cli
-            uses: yandex-cloud/yc-cli-action@v1
-            with:
-              yc-token: y0_AgAAAAAXBtATAATuwQAAAAEAG_rLAAChm-kV2qBHyLjAgwKtv43dr_yZ7Q
-
-          - name: Build and deploy
-            run: |
-              # Деплой функции в Yandex Cloud
-              yc serverless function version create \
-                --function-name my-function \
-                --runtime go113 \
-                --entrypoint my-function \
-                --memory 256m \
-                --execution-timeout 5s \
-                --source-path ./bin/main  # Указываем путь к исполняемому файлу в папке bin/main
-
-              # Публикация версии функции
-              yc serverless function version publish \
-                --function-name my-function
-
-          - name: Show deployment status
-            run: |
-           
-              yc serverless function version list \
-                --function-name my-function
+      - name: Show deployment status
+        run: |
+          # Вывод статуса деплоя (по желанию)
+          yc serverless function version list \
+            --function-name my-function
