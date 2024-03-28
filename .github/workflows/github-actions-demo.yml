@@ -1,45 +1,44 @@
-name: CI
+name: Deploy to Yandex Cloud Function
 
 on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
-  build:
+  deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Set up Go
-        uses: actions/setup-go@v2
+      - name: Set up yc-cli
+        uses: yandex-cloud/yc-cli-action@v1
         with:
-          go-version: '1.17'  
+          yc-token: ${{AUTHORIZED_KEY}} 
 
-      - name: Install dependencies
-        run: go mod download
-
-      - name: Build binary
-        run: go build -o bin/myapp cmd/main.go
-
-      - name: Run unit tests
-        run: go test -v ./...
-
-      - name: Upload binary artifact
-        uses: actions/upload-artifact@v2
-        with:
-          name: myapp-binary 
-          path: bin/myapp
-
-      - name: Deploy to Yandex Cloud Functions
+      - name: Build and deploy
         run: |
-          curl -X POST \
-            -H "Authorization: Bearer $YANDEX_CLOUD_API_TOKEN" \
-            -F "file=@bin/myapp" \
-            -F "function_id=$YANDEX_CLOUD_FUNCTION_ID" \
-            https://functions.yandexcloud.net/api/v1/functions/upload
+          # Сборка и подготовка кода (если необходимо)
+          # Например, компиляция Go-кода
+          go build -o my-function main.go
 
+          # Деплой функции в Yandex Cloud
+          yc serverless function version create \
+            --function-name my-function \
+            --runtime go113 \
+            --entrypoint my-function \
+            --memory 256m \
+            --execution-timeout 5s \
+            --source-path ./my-function
+
+          # Публикация версии функции
+          yc serverless function version publish \
+            --function-name my-function
+
+      - name: Show deployment status
+        run: |
+          # Вывод статуса деплоя (по желанию)
+          yc serverless function version list \
+            --function-name my-function
