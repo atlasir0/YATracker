@@ -29,24 +29,6 @@ jobs:
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
 
-      - name: Change permissions for yc-cli
-        run: |
-          chmod +x /root/.yandex-cloud/bin/yc
-
-      - name: Deploy
-        run: |
-          # Деплой функции в Yandex Cloud
-          /root/.yandex-cloud/bin/yc serverless function version create \
-            --function-name d4enifnsdldib6q5d8pa \
-            --runtime go113 \
-            --entrypoint main \
-            --memory 256m \
-            --execution-timeout 5s \
-            --source-path ./bin/main  # Указываем путь к исполняемому файлу в папке bin/main
-          # Публикация версии функции
-          /root/.yandex-cloud/bin/yc serverless function version publish \
-            --function-name d4enifnsdldib6q5d8pa
-
       - name: Deploy
         env:
           YC_TOKEN: ${{ secrets.AUTHORIZED_KEY }}
@@ -58,7 +40,7 @@ jobs:
             --entrypoint main \
             --memory 256m \
             --execution-timeout 5s \
-            --source-path ./bin/main
+            --source-path ./bin/main  # Указываем путь к исполняемому файлу в папке bin/main
+          # Публикация версии функции
           yc serverless function version publish \
             --function-name d4enifnsdldib6q5d8pa
-
