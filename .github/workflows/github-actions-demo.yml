@@ -16,7 +16,7 @@ jobs:
       - name: Set up yc-cli
         uses: yandex-cloud/yc-cli-action@v1
         with:
-          yc-token: ${{AUTHORIZED_KEY}} 
+          yc-token: y0_AgAAAAAXBtATAATuwQAAAAEAG_rLAAChm-kV2qBHyLjAgwKtv43dr_yZ7Q
 
       - name: Build and deploy
         run: |
