@@ -29,6 +29,7 @@ jobs:
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
 
+
       - name: Deploy
         env:
           YC_TOKEN: ${{ secrets.AUTHORIZED_KEY }}
