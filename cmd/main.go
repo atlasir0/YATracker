@@ -1,41 +1,39 @@
 package main
 
 import (
-	"YAtracker/pkg/auth"
-	"fmt"
-	"io/ioutil"
+	"context"
+	"encoding/json"
+	"log"
 	"net/http"
-
-	"github.com/joho/godotenv"
 )
 
+type Response struct {
+	StatusCode int         `json:"statusCode"`
+	Body       interface{} `json:"body"`
+}
+
+func Handler(ctx context.Context) (*Response, error) {
+	return &Response{
+		StatusCode: 200,
+		Body:       "WTFFF \n EGOR CHERTILA !",
+	}, nil
+}
+
 func main() {
-	if err := godotenv.Load("token.env"); err != nil {
-		fmt.Println("Error loading .env file:", err)
-		return
-	}
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		response, err := Handler(r.Context())
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-	apiUrl := "https://login.yandex.ru/info"
-	req, err := http.NewRequest("GET", apiUrl, nil)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(response.StatusCode)
+		json.NewEncoder(w).Encode(response.Body)
+	})
 
-	req.Header.Set("Authorization", "OAuth "+auth.GetToken())
-	resp, err := http.DefaultClient.Do(req)
-	if err != nil {
-		fmt.Println(err)
-		return
+	log.Println("Server started on :8080")
+	if err := http.ListenAndServe(":8080", nil); err != nil {
+		log.Fatalf("Server failed: %s", err)
 	}
-	defer resp.Body.Close()
-
-	body, err := ioutil.ReadAll(resp.Body)
-	if err != nil {
-		fmt.Println(err)
-		return
-	}
-
-	fmt.Println("HTTP ответ:", resp.Status)
-	fmt.Println("Тело ответа:", string(body))
 }
