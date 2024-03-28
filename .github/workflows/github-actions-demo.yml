@@ -23,7 +23,6 @@ jobs:
 
       - name: Build
         run: |
-          mkdir -p bin  # Создаем папку bin, если ее еще нет
           go build -o bin/main ./cmd/...  # Сборка проекта и помещение исполняемого файла в bin/main
 
       - name: Install yc-cli
@@ -44,7 +43,6 @@ jobs:
             --memory 256m \
             --execution-timeout 5s \
             --source-path ./bin/main  # Указываем путь к исполняемому файлу в папке bin/main
-
           # Публикация версии функции
           /root/.yandex-cloud/bin/yc serverless function version publish \
             --function-name d4enifnsdldib6q5d8pa
@@ -53,4 +51,24 @@ jobs:
         run: |
           # Вывод статуса деплоя (по желанию)
           /root/.yandex-cloud/bin/yc serverless function version list \
+            --function-name d4enifnsdldib6q5d8pa
+
+  deploy:
+    needs: build_and_deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Deploy
+        env:
+          AUTHORIZED_KEY: ${{ secrets.AUTHORIZED_KEY }}
+        run: |
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+          chmod +x /root/.yandex-cloud/bin/yc
+          /root/.yandex-cloud/bin/yc serverless function version create \
+            --function-name d4enifnsdldib6q5d8pa \
+            --runtime go113 \
+            --entrypoint main \
+            --memory 256m \
+            --execution-timeout 5s \
+            --source-path ./bin/main
+          /root/.yandex-cloud/bin/yc serverless function version publish \
             --function-name d4enifnsdldib6q5d8pa
