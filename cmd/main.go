@@ -9,8 +9,6 @@ import (
 	"github.com/joho/godotenv"
 )
 
-// test
-// test2
 func main() {
 	if err := godotenv.Load("token.env"); err != nil {
 		fmt.Println("Error loading .env file:", err)

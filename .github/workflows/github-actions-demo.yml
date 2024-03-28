@@ -4,6 +4,23 @@ on:
   push:
     branches:
       - main
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Go
+        uses: actions/setup-go@v2
+        with:
+          go-version: '1.17'  
+
+      - name: Install make
+        run: sudo apt-get install make  # Установка make, если еще не установлен
+
+      - name: Build
+        run: make build  # Вызов команды сборки из Makefile
 
 jobs:
   deploy:
