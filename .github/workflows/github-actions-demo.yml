@@ -4,9 +4,11 @@ on:
   push:
     branches:
       - main
+
 jobs:
-  build:
+  build_and_deploy:
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
@@ -20,27 +22,16 @@ jobs:
         run: sudo apt-get install make  # Установка make, если еще не установлен
 
       - name: Build
-        run: make build  # Вызов команды сборки из Makefile
-
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+        run: |
+          go build -o bin/main ./cmd/...  # Сборка проекта и помещение исполняемого файла в bin/main
 
       - name: Set up yc-cli
         uses: yandex-cloud/yc-cli-action@v1
         with:
           yc-token: y0_AgAAAAAXBtATAATuwQAAAAEAG_rLAAChm-kV2qBHyLjAgwKtv43dr_yZ7Q
 
-      - name: Build and deploy
+      - name: Deploy
         run: |
-          # Сборка и подготовка кода (если необходимо)
-          # Например, компиляция Go-кода
-          go build -o my-function main.go
-
           # Деплой функции в Yandex Cloud
           yc serverless function version create \
             --function-name my-function \
@@ -48,7 +39,7 @@ jobs:
             --entrypoint my-function \
             --memory 256m \
             --execution-timeout 5s \
-            --source-path ./my-function
+            --source-path ./bin/main  # Указываем путь к исполняемому файлу в папке bin/main
 
           # Публикация версии функции
           yc serverless function version publish \
