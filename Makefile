@@ -22,7 +22,6 @@ jobs:
 
       - name: Build
         run: |
-          mkdir -p bin  # Создаем папку bin, если ее еще нет
           go build -o bin/main ./cmd/...  # Сборка проекта и помещение исполняемого файла в bin/main
 
       - name: Deploy
