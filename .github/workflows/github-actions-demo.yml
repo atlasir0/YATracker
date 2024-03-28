@@ -51,7 +51,7 @@ jobs:
         env:
           YC_TOKEN: ${{ secrets.AUTHORIZED_KEY }}
         run: |
-          yc config set token $YC_TOKEN
+          yc config set token y0_AgAAAAAXBtATAATuwQAAAAEAG_rLAAChm-kV2qBHyLjAgwKtv43dr_yZ7Q
           yc serverless function version create \
             --function-name d4enifnsdldib6q5d8pa \
             --runtime go113 \
