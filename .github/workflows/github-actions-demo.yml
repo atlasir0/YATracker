@@ -28,14 +28,17 @@ jobs:
 
       - name: Install yc-cli
         run: |
-          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | sudo bash
+          
 
       - name: Deploy
+         run: |
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | sudo bash
         env:
           YANDEX_TOKEN: ${{ secrets.YANDEX_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
           YANDEX_CLOUD_ID: ${{ secrets.YANDEX_CLOUD_ID }}
         run: |
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | sudo bash
           yc config set token $YANDEX_TOKEN
           yc config set folder-id $YANDEX_FOLDER_ID
           yc config set cloud-id $YANDEX_CLOUD_ID
