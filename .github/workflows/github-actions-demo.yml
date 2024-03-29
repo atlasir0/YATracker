@@ -36,9 +36,9 @@ jobs:
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
           YANDEX_CLOUD_ID: ${{ secrets.YANDEX_CLOUD_ID }}
         run: |
-          yc config set token y0_AgAAAAAXBtATAATuwQAAAAEAG_rLAAChm-kV2qBHyLjAgwKtv43dr_yZ7Q
-          yc config set folder-id d4e04bfirrj8ti8586os
-          yc config set cloud-id ajekmj6ld3jik5cel02n
+          yc config set token 
+          yc config set folder-id 
+          yc config set cloud-id 
           yc serverless function version create \
             --function-name wtf2 \
             --runtime go113 \
