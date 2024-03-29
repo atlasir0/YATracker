@@ -25,14 +25,8 @@ jobs:
       - name: Build
         run: |
           go build -o bin/main ./cmd/...  # Сборка проекта и помещение исполняемого файла в bin/main
-
-      - name: Install yc-cli
-        run: |
           
-
       - name: Deploy
-         run: |
-          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | sudo bash
         env:
           YANDEX_TOKEN: ${{ secrets.YANDEX_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
