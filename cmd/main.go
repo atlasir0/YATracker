@@ -1,39 +1,49 @@
 package main
 
 import (
-	"context"
-	"encoding/json"
-	"log"
+	"fmt"
 	"net/http"
+	"os"
 )
 
-type Response struct {
-	StatusCode int         `json:"statusCode"`
-	Body       interface{} `json:"body"`
+type Request struct {
 }
 
-func Handler(ctx context.Context) (*Response, error) {
-	return &Response{
-		StatusCode: 200,
-		Body:       "WTFFF \n EGOR CHERTILA !",
-	}, nil
+type Response struct {
+	Message string `json:"message"`
+}
+
+func Handler() (*Response, error) {
+	apiUrl := "https://login.yandex.ru/info"
+	httpReq, err := http.NewRequest("GET", apiUrl, nil)
+
+	if err != nil {
+		return nil, err
+	}
+
+	token := os.Getenv("YANDEX_TOKEN")
+	httpReq.Header.Set("Authorization", "OAuth "+token)
+	resp, err := http.DefaultClient.Do(httpReq)
+
+	if err != nil {
+		return nil, err
+	}
+	defer resp.Body.Close()
+
+	fmt.Println("HTTP ответ:", resp.Status)
+
+	if resp.StatusCode == http.StatusOK {
+		return &Response{Message: "Доступ получен"}, nil
+	} else {
+		return &Response{Message: resp.Status}, nil
+	}
 }
 
 func main() {
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		response, err := Handler(r.Context())
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		w.Header().Set("Content-Type", "application/json")
-		w.WriteHeader(response.StatusCode)
-		json.NewEncoder(w).Encode(response.Body)
-	})
-
-	log.Println("Server started on :8080")
-	if err := http.ListenAndServe(":8080", nil); err != nil {
-		log.Fatalf("Server failed: %s", err)
+	response, err := Handler()
+	if err != nil {
+		fmt.Println("Ошибка:", err)
+		return
 	}
+	fmt.Println("Сообщение:", response.Message)
 }
