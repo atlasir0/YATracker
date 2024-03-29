@@ -28,8 +28,7 @@ jobs:
 
       - name: Install yc-cli
         run: |
-          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
-          echo "export PATH=$PATH:/usr/local/bin" >> $GITHUB_ENV  # Добавление /usr/local/bin в PATH
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | sudo bash
 
       - name: Deploy
         env:
@@ -37,7 +36,6 @@ jobs:
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
           YANDEX_CLOUD_ID: ${{ secrets.YANDEX_CLOUD_ID }}
         run: |
-          export PATH=$PATH:/usr/local/bin
           yc config set token $YANDEX_TOKEN
           yc config set folder-id $YANDEX_FOLDER_ID
           yc config set cloud-id $YANDEX_CLOUD_ID
