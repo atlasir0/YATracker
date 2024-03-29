@@ -37,7 +37,7 @@ jobs:
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
           YANDEX_CLOUD_ID: ${{ secrets.YANDEX_CLOUD_ID }}
         run: |
-          source "/home/runner/.bashrc"
+          export PATH=$PATH:/usr/local/bin
           yc config set token $YANDEX_TOKEN
           yc config set folder-id $YANDEX_FOLDER_ID
           yc config set cloud-id $YANDEX_CLOUD_ID
