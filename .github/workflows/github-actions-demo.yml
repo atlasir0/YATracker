@@ -45,7 +45,7 @@ jobs:
             --entrypoint main \
             --memory 256m \
             --execution-timeout 5s \
-            --source-path ./bin/main
+            --source-path ./main-go.zip
           # Публикация версии функции
           yc serverless function version publish \
             --function-name wtf2
