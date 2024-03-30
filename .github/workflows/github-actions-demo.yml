@@ -30,7 +30,7 @@ jobs:
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | sudo bash
           echo "export PATH=$PATH:/usr/local/bin" >> $GITHUB_ENV
-      - name: Deploy
+      - name: Deployy 
         env:
           YANDEX_TOKEN: ${{ secrets.YANDEX_TOKEN }}
           YANDEX_FOLDER_ID: ${{ secrets.YANDEX_FOLDER_ID }}
