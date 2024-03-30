@@ -28,7 +28,7 @@ jobs:
 
       - name: Install yc-cli
         run: |
-          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | sudo bash
+          curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh 
           echo "export PATH=$PATH:/usr/local/bin" >> $GITHUB_ENV
       - name: Deployy 
         env:
