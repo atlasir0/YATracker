@@ -34,6 +34,7 @@ jobs:
         run: |
           curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash 
           echo "export PATH=$PATH:/usr/local/bin" >> $GITHUB_ENV
+          source ~/.bashrc
           yc config set token $YANDEX_TOKEN
           yc config set folder-id $YANDEX_FOLDER_ID
           yc config set cloud-id $YANDEX_CLOUD_ID
